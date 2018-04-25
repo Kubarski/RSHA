@@ -1,5 +1,17 @@
 #!/bin/bash
 #Kasutaja loomine ilma paroolita
 
+if [ $# -ne 1 ]; then
+echo "Kasutajajuhend $0 kasutajanimi"
+else
 kasutajanimi=$1
-useradd -m $kasutajanimi
+useadd $kasutajanimi -m -s /bin/bash
+if [ $? -eq ]; then
+echo "Kasutaja nimega $kasutajanimi on lisatud süsteemi"
+cat /etc/passwd | grep $kasutajanimi
+ls -la /home/$kasutajanimi
+else
+echo "probleem kasutaja $kasutajanimi lisamisega"
+echo "probleemi kood on $?"
+fi
+fi
