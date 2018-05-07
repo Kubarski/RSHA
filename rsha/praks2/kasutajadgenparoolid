@@ -1,12 +1,12 @@
 #!/bin/bash
 #pwgen -s 8 1
-File= "gen_parooliga_kasutajad"
-failnimi=$1
 
-While IFS read line; do
-i=$(( i + 1 ))
-pass=$(pwgen -s 8 1)
-useradd -m -s /bin/bash $line
-echo "$line:$pass" | chpasswd
-echo "$line:$pass" >> $file
-done < $failinimi
+while read nimi
+do
+	kasutaja=$nimi
+	parool=$(pwgen 6)
+		echo "$kasutaja parool on $parool"
+	useradd -m -s /bin/bash  $kasutaja
+		echo "$kasutaja:$parool" | chpasswd
+		echo "$kasutaja:$parool" >> $gen_paooliga_kasutajad
+done < $1
