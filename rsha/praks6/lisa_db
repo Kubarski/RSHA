@@ -1,0 +1,34 @@
+#!/bin/bash
+#
+#Andmebaasi loomise skript
+kasutaja=$1
+parool=$(tr -cd '[:alnum:]' < /dev/urandom | fold -w30 | head -n1)
+echo "$password=$parool" > .parrol.tmp
+echo "$parool" > .parool2.tmp
+
+if [ $# -ne 1 ]; then
+	echo "Kasutusjuhend: $0 Kasutajanimi"
+else
+echo "Palun sisesta Andmebaasi root kasutaja parool: "
+read dbrootpass
+
+################################################
+echo "[Client]" > /home/$kasutaja/.my.cnf
+echo "User=$kasutaja" >> /home/$kasutaja/.my.cnf
+paste .parool.tmp >> /home/$kasutaja/.my.cnf
+################################################
+
+echo "sisesta andmebaasi nimi"
+read dbnimi
+dbname="$kasutaja""_""$dbnimi"
+for dbpass in $(cat .parool2.tmp)
+do
+mysql -uroot -p$dbrootpass -e "CREATE DATABASE $dbname ; GRANT ALL PRIVILEGES ON $dbname.* TO $kasutaja@localhost IDENTIFIED BY '$dbpass'"
+echo "Andmebaas on loodud."
+done
+
+chown "$kasutaja"":""$kasutaja" /home/$kasutaja/.my.cnf
+chmod 0644 /home/$kasutaja/.my.cnf
+rm .parool.tmp
+rm.parool2.tmp
+fi
