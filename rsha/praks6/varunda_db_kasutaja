@@ -1,0 +1,20 @@
+#!/bin/bash 
+#
+#Andmebaasi loomise skript
+kasutaja=$1
+dbname="$1_$2"
+kp=$(date +"%Y-%m-%d.%H-%M")
+
+if [ $# -ne 2 ]; then
+	echo "Kasutusjuhend: $0 Kasutajanimi Andmebaasinimi"
+elif [ ! -e /home/$kasutaja/.my.cnf]; then
+sh kasutaja_db
+
+else
+mysqldump -u$kasutaja $dbname > /home/$kasutaja/$kp.$dbname.backup.sql
+mkdir /mysql_backup
+chown "$kasutaja"":""$kasutaja" /mysql_backup
+tar -czvf /home /home/$kasutaja/$kp.%dbname.backup.sql.tar.gz /home/$kasutaja/$kp.$dbname.backup.sql
+mv /home/$kasutaja/$kp.$dbname.backup.tar.gx /mysql_backup
+rm /home/$kasutaja/$kp.$dbname.backup.sql
+fi
